@@ -91,32 +91,30 @@
 }
 
 % Date-column entry: {date}{title}{location}{body}
-\newcommand{\datecol}{1.05in}
-\newcommand{\cventryhead}[3]{\small #1 & \textbf{#2}\hfill{\scriptsize\bfseries #3}}
-\newcommand{\cventryshort}[4]{%  entry without a body
+% The header row is a two-column table; the body is set in a separate box
+% aligned with the title column, so long dates or bullet lists never collide
+% with neighbouring entries, whatever the font.
+\newlength{\datecol}\setlength{\datecol}{1.12in}
+\newlength{\colgap}\setlength{\colgap}{8pt}
+\newcommand{\cventryhead}[3]{%
   \noindent
-  \begin{tabularx}{\linewidth}{@{}p{\datecol}X@{}}
-    \cventryhead{#1}{#2}{#3} \\
-  \end{tabularx}\par\vspace{7pt}%
-}
-\newcommand{\cventryfull}[4]{%  entry with a body under the title
-  \noindent
-  \begin{tabularx}{\linewidth}{@{}p{\datecol}X@{}}
-    \cventryhead{#1}{#2}{#3} \\
-    & #4 \\
-  \end{tabularx}\par\vspace{7pt}%
-}
+  \begin{tabularx}{\linewidth}{@{}p{\datecol}@{\hspace{\colgap}}X@{}}
+    \small #1 & \textbf{#2}\hfill{\scriptsize\bfseries\ #3} \\
+  \end{tabularx}\par}
 \newcommand{\cventry}[4]{%
+  \Needspace{3\baselineskip}%
+  \cventryhead{#1}{#2}{#3}%
   \def\cvbody{#4}%
-  \ifx\cvbody\empty\expandafter\cventryshort\else\expandafter\cventryfull\fi
-  {#1}{#2}{#3}{#4}%
+  \ifx\cvbody\empty\else
+    \vspace{1pt}\noindent\hspace*{\dimexpr\datecol+\colgap\relax}%
+    \begin{minipage}[t]{\dimexpr\linewidth-\datecol-\colgap\relax}#4\end{minipage}\par
+  \fi
+  \vspace{8pt}%
 }
 
 % Bullets inside an entry
 \newenvironment{cvitems}{%
   \begin{itemize}[leftmargin=12pt,nosep,
-                  before={\vspace{-0.45\baselineskip}},
-                  after={\vspace{-\baselineskip}},
                   label={\textcolor{gray}{\scriptsize$\bullet$}}]\small
 }{\end{itemize}}
 
@@ -136,22 +134,34 @@
 \begin{document}
 
 %----------HEADING----------
+\newcommand{\cvname}{{\fontsize{20}{22}\selectfont\bfseries TUAN VAN VO}}
+\newcommand{\cvupdated}{\small\textit{Updated on \today}}
+\newcommand{\cvweb}{\iconGlobe\hspace{0.5em}\link{https://vovantuan1999a.github.io/tuanvovan/}{vovantuan1999a.github.io/tuanvovan}}
+\newcommand{\cvmail}{\iconEnvelope\hspace{0.5em}\link{mailto:vovantuan1999a@gmail.com}{vovantuan1999a@gmail.com}}
+\newcommand{\cvscholar}{\iconScholar\hspace{0.5em}\link{https://scholar.google.com/citations?user=TsjvwzgAAAAJ}{Google Scholar}}
+\newcommand{\cvgithub}{\iconGithub\hspace{0.5em}\link{https://github.com/vovantuan1999a}{GitHub}}
+\newcommand{\cvphone}{\iconPhone\hspace{0.5em}+971\,50\,438\,3972}
 \noindent
 \ifshowphoto
-  \begin{minipage}[c]{\dimexpr\photosize+1pt\relax}\cvphoto\end{minipage}\hspace{14pt}%
-  \begin{minipage}[c]{\dimexpr\linewidth-\photosize-15pt\relax}
+  % Photo on the left; name on top and contacts in a grid beneath it
+  \begin{minipage}[c]{\dimexpr\photosize+1pt\relax}\cvphoto\end{minipage}\hspace{16pt}%
+  \begin{minipage}[c]{\dimexpr\linewidth-\photosize-17pt\relax}
+    \cvname\par\vspace{2pt}
+    \cvupdated\par\vspace{7pt}
+    \footnotesize
+    \begin{tabular}{@{}l@{\hspace{16pt}}l@{\hspace{16pt}}l@{}}
+      \cvweb & \cvmail & \cvphone \\[3pt]
+      \cvscholar & \cvgithub & \\
+    \end{tabular}
+  \end{minipage}
+\else
+  % No photo: name on the left, contacts on the right (reference layout)
+  \begin{tabular*}{\linewidth}{@{}l@{\hspace{16pt}\extracolsep{\fill}}l@{\hspace{16pt}}l@{}}
+    \cvname & \small\cvweb & \small\cvmail \\[2pt]
+    \cvupdated & \small\cvscholar & \small\cvgithub \\[2pt]
+    & & \small\cvphone \\
+  \end{tabular*}
 \fi
-\ifshowphoto\let\contactsize\footnotesize\else\let\contactsize\small\fi
-\begin{tabular*}{\linewidth}{@{}l@{\extracolsep{\fill}}l@{\hspace{14pt}}l@{}}
-  {\fontsize{20}{22}\selectfont\bfseries TUAN VAN VO} &
-  \contactsize\iconGlobe\hspace{0.6em}\link{https://vovantuan1999a.github.io/tuanvovan/}{vovantuan1999a.github.io/tuanvovan} &
-  \contactsize\iconEnvelope\hspace{0.6em}\link{mailto:vovantuan1999a@gmail.com}{vovantuan1999a@gmail.com} \\[2pt]
-  \small\textit{Updated on \today} &
-  \contactsize\iconScholar\hspace{0.6em}\link{https://scholar.google.com/citations?user=TsjvwzgAAAAJ}{Google Scholar} &
-  \contactsize\iconGithub\hspace{0.6em}\link{https://github.com/vovantuan1999a}{GitHub} \\[2pt]
-  & & \contactsize\iconPhone\hspace{0.6em}+971\,50\,438\,3972 \\
-\end{tabular*}
-\ifshowphoto\end{minipage}\fi
 
 %----------EDUCATION----------
 \cvsection{Education}
@@ -264,7 +274,7 @@
   {UIT Study Scholarship, University of Information Technology, VNU-HCM}{}{}
 
 \cventry{2017 -- 2021}
-  {Talented Class Scholarship (Honors Program), University of Information Technology, VNU-HCM}{}
+  {Talented Class Scholarship (Honors Program), UIT, VNU-HCM}{}
   {Scholarship with stipend for students of the Talented Class, a selective honors program offering special curricula and recognition for exceptional undergraduate students.}
 
 \cventry{2019}
@@ -343,7 +353,7 @@
 \cvsection{Skills}
 
 \small
-\begin{tabularx}{\linewidth}{@{}p{\datecol}X@{}}
+\begin{tabularx}{\linewidth}{@{}p{\datecol}@{\hspace{\colgap}}X@{}}
   \textbf{Programming} & Python, C/C++, SQL \\[2pt]
   \textbf{AI \& Training} & PyTorch, TensorFlow, Keras, OpenCV, CUDA basics; large-scale distributed training of VLA, VLM, LLM, MLLM, video generation and video world models \\[2pt]
   \textbf{Robotics} & ROS, robotic system deployment, VLA/WAM deployment on real robots, teleoperation-based data collection \\[2pt]
@@ -355,34 +365,39 @@
 %----------REFERENCES----------
 \cvsection{References}
 
+% \cvref{name}{position}{links}: one self-contained block per referee
+\newcommand{\cvref}[3]{\textbf{#1}\newline #2\newline #3}
 \small
-\begin{tabularx}{\linewidth}{@{}X@{\hspace{16pt}}X@{}}
-  \textbf{Prof. Ian Reid} (PhD advisor) &
-  \textbf{Prof. Anh Nguyen} \\
-  Acting Vice Provost, Research; Senior Director, Research Administration; Chair, Robotics and Physical AI Initiative; Professor, Computer Vision, MBZUAI &
-  Associate Professor, University of Liverpool; Director, Smart Robotic Lab \\
-  \link{mailto:Ian.Reid@mbzuai.ac.ae}{Ian.Reid@mbzuai.ac.ae}\sep
-  \link{https://scholar.google.com/citations?user=ATkNLcQAAAAJ}{Scholar}\sep
-  \link{https://mbzuai.ac.ae/academics/faculty-directory/ian-reid}{Homepage} &
-  \link{mailto:anh.nguyen@liverpool.ac.uk}{anh.nguyen@liverpool.ac.uk}\sep
-  \link{https://scholar.google.com/citations?user=gEbaF0sAAAAJ}{Scholar}\sep
-  \link{https://www.csc.liv.ac.uk/~anguyen/}{Homepage} \\[8pt]
-
-  \textbf{Prof. Ngai-Man (Man) Cheung} &
-  \textbf{Prof. Thieu N. Vo} \\
-  Associate Professor, SUTD; Associate Pillar Head (Education) &
-  Assistant Professor, Department of Computer Science, University of Bath \\
-  \link{mailto:ngaiman_cheung@sutd.edu.sg}{ngaiman\_cheung@sutd.edu.sg}\sep
-  \link{https://scholar.google.com/citations?user=vJQArFkAAAAJ}{Scholar}\sep
-  \link{https://sites.google.com/site/mancheung0407/}{Homepage} &
-  \link{mailto:ntv22@bath.ac.uk}{ntv22@bath.ac.uk}\sep
-  \link{https://scholar.google.com/citations?user=CM2qJSoAAAAJ}{Scholar} \\[8pt]
-
-  \textbf{Prof. Baoru Huang} & \\
-  Assistant Professor, Department of Computer Science, University of Liverpool & \\
-  \link{mailto:bh1518@ic.ac.uk}{bh1518@ic.ac.uk}\sep
-  \link{https://scholar.google.com/citations?user=unbPvWAAAAAJ}{Scholar}\sep
-  \link{https://baoru.netlify.app/}{Homepage} & \\
+\begin{tabularx}{\linewidth}{@{}X@{\hspace{18pt}}X@{}}
+  \cvref{Prof. Ian Reid \textmd{(PhD advisor)}}
+        {Acting Vice Provost, Research; Senior Director, Research Administration; Chair, Robotics and Physical AI Initiative; Professor, Computer Vision, MBZUAI}
+        {\link{mailto:Ian.Reid@mbzuai.ac.ae}{Ian.Reid@mbzuai.ac.ae}\sep
+         \link{https://scholar.google.com/citations?user=ATkNLcQAAAAJ}{Scholar}\sep
+         \link{https://mbzuai.ac.ae/academics/faculty-directory/ian-reid}{Homepage}}
+  &
+  \cvref{Prof. Anh Nguyen}
+        {Associate Professor, University of Liverpool; Director, Smart Robotic Lab}
+        {\link{mailto:anh.nguyen@liverpool.ac.uk}{anh.nguyen@liverpool.ac.uk}\sep
+         \link{https://scholar.google.com/citations?user=gEbaF0sAAAAJ}{Scholar}\sep
+         \link{https://www.csc.liv.ac.uk/~anguyen/}{Homepage}}
+  \\ \noalign{\vspace{8pt}}
+  \cvref{Prof. Ngai-Man (Man) Cheung}
+        {Associate Professor, SUTD; Associate Pillar Head (Education)}
+        {\link{mailto:ngaiman_cheung@sutd.edu.sg}{ngaiman\_cheung@sutd.edu.sg}\sep
+         \link{https://scholar.google.com/citations?user=vJQArFkAAAAJ}{Scholar}\sep
+         \link{https://sites.google.com/site/mancheung0407/}{Homepage}}
+  &
+  \cvref{Prof. Thieu N. Vo}
+        {Assistant Professor, Department of Computer Science, University of Bath}
+        {\link{mailto:ntv22@bath.ac.uk}{ntv22@bath.ac.uk}\sep
+         \link{https://scholar.google.com/citations?user=CM2qJSoAAAAJ}{Scholar}}
+  \\ \noalign{\vspace{8pt}}
+  \cvref{Prof. Baoru Huang}
+        {Assistant Professor, Department of Computer Science, University of Liverpool}
+        {\link{mailto:bh1518@ic.ac.uk}{bh1518@ic.ac.uk}\sep
+         \link{https://scholar.google.com/citations?user=unbPvWAAAAAJ}{Scholar}\sep
+         \link{https://baoru.netlify.app/}{Homepage}}
+  & \\
 \end{tabularx}
 \normalsize
 
