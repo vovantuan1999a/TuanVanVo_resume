@@ -1,443 +1,363 @@
-%-------------------------
-% Resume in Latex
-% Author : Jake Gutierrez
-% Based off of: https://github.com/sb2nov/resume
-% License : MIT
-%------------------------
+%-------------------------------------------------------------------------------
+% CV of Tuan Van Vo
+% Layout: academic CV with a left date column, ruled section headers and
+% three-line publication entries (authors / title / venue + links).
+% Compile with pdfLaTeX on Overleaf.
+%-------------------------------------------------------------------------------
+\documentclass[10pt,a4paper]{article}
 
-\documentclass[letterpaper,11pt]{article}
-\usepackage{enumitem}
-\usepackage{latexsym}
-\usepackage[empty]{fullpage}
-\usepackage{titlesec}
-\usepackage{marvosym}
-\usepackage[usenames,dvipsnames]{color}
-\usepackage{verbatim}
-\usepackage{enumitem}
-\usepackage{hyperref}
-\usepackage{fancyhdr}
-\usepackage{xcolor}
-\usepackage[parfill]{parskip} % Remove paragraph indentation
-\usepackage{array} % Required for boldface (\bf and \bfseries) tabular columns
-\usepackage{ifthen} % Required for ifthenelse statements
-% \usepackage[bottom=0 in,top=0 in]{geometry}
-
-\pagestyle{empty} % Suppress page numbers
-
-
-\usepackage{latexsym}
-\usepackage[empty]{fullpage}
-\usepackage{titlesec}
-\usepackage{marvosym}
-\usepackage[usenames,dvipsnames]{color}
-\usepackage{verbatim}
-\usepackage{enumitem}
-% \usepackage[hidelinks]{hyperref}
-\usepackage{fancyhdr}
+\usepackage[a4paper,left=0.75in,right=0.75in,top=0.6in,bottom=0.7in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
+\usepackage{xcolor}
 \usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{needspace}
+\usepackage[hidelinks]{hyperref}
 \input{glyphtounicode}
+\pdfgentounicode=1   % keep the PDF machine-readable
 
+%----------FONT (Lato on Overleaf; Helvetica fallback elsewhere)----------
+\IfFileExists{lato.sty}{%
+  \usepackage[default]{lato}%
+}{%
+  \usepackage[scaled]{helvet}\renewcommand{\familydefault}{\sfdefault}%
+}
 
-%----------FONT OPTIONS----------
-% sans-serif
-% \usepackage[sfdefault]{FiraSans}
-% \usepackage[sfdefault]{roboto}
-% \usepackage[sfdefault]{noto-sans}
-% \usepackage[default]{sourcesanspro}
+%----------ICONS (FontAwesome 5 on Overleaf; blank fallback elsewhere)----------
+\IfFileExists{fontawesome5.sty}{%
+  \usepackage{fontawesome5}%
+}{%
+  \newcommand{\faGlobe}{}\newcommand{\faEnvelope}{}\newcommand{\faGithub}{}%
+  \newcommand{\faPhone}{}\newcommand{\faGraduationCap}{}%
+}
 
-% serif
-% \usepackage{CormorantGaramond}
-% \usepackage{charter}
+%----------COLORS----------
+\definecolor{linkblue}{RGB}{58,110,165}
+\definecolor{hlred}{RGB}{214,40,40}
+\definecolor{rulegray}{RGB}{40,40,40}
 
-
+%----------FOOTER: "Page x of y"----------
 \pagestyle{fancy}
-\fancyhf{} % clear all header and footer fields
-\fancyfoot{}
+\fancyhf{}
 \renewcommand{\headrulewidth}{0pt}
-\renewcommand{\footrulewidth}{0pt}
+\cfoot{\small Page \thepage\ of \pageref{LastPage}}
 
-% Adjust margins
-\addtolength{\oddsidemargin}{-0.5in}
-\addtolength{\evensidemargin}{-0.5in}
-\addtolength{\textwidth}{1in}
-\addtolength{\topmargin}{-.5in}
-\addtolength{\textheight}{1.0in}
-
-\urlstyle{same}
-
+\setlength{\parindent}{0pt}
+\setlength{\tabcolsep}{0pt}
 \raggedbottom
-\raggedright
-\setlength{\tabcolsep}{0in}
 
-% Sections formatting
-\titleformat{\section}{
-  \vspace{-4pt}\scshape\raggedright\large
-}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
-\titlespacing*{\subsection}{0pt}{6pt}{2pt}
+%-------------------------------------------------------------------------------
+% Commands
+%-------------------------------------------------------------------------------
+% Blue underlined-style link
+\newcommand{\link}[2]{\href{#1}{\textcolor{linkblue}{#2}}}
+% Red highlight for awards / oral presentations
+\newcommand{\hl}[1]{\textcolor{hlred}{\textbf{#1}}}
+% Thin separator between links
+\newcommand{\sep}{\,\textcolor{gray}{$|$}\,}
+% Highlight own name
+\newcommand{\me}{\textbf{Tuan Van Vo}}
 
-% Ensure that generate pdf is machine readable/ATS parsable
-\pdfgentounicode=1
-
-%-------------------------
-% Custom commands
-\newcommand{\resumeItem}[1]{
-  \item\small{
-    {#1 \vspace{-2pt}}
-  }
+% Section header: bold caps + rule to the right margin
+\newcommand{\cvsection}[1]{%
+  \vspace{10pt}\par\Needspace{6\baselineskip}\noindent
+  {\small\bfseries\MakeUppercase{#1}}%
+  \hspace{6pt}{\color{rulegray}\leaders\hrule height 0.6pt\hfill\kern0pt}%
+  \par\vspace{6pt}%
 }
 
-\newcommand{\resumeSubheading}[4]{
-  \vspace{-2pt}\item
-    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
-      \textbf{#1} & #2 \\
-      \textit{\small#3} & \textit{\small #4} \\
-    \end{tabular*}\vspace{-7pt}
+% Date-column entry: {date}{title}{location}{body}
+\newcommand{\datecol}{1.05in}
+\newcommand{\cventryhead}[3]{\small #1 & \textbf{#2}\hfill{\scriptsize\bfseries #3}}
+\newcommand{\cventryshort}[4]{%  entry without a body
+  \noindent
+  \begin{tabularx}{\linewidth}{@{}p{\datecol}X@{}}
+    \cventryhead{#1}{#2}{#3} \\
+  \end{tabularx}\par\vspace{7pt}%
+}
+\newcommand{\cventryfull}[4]{%  entry with a body under the title
+  \noindent
+  \begin{tabularx}{\linewidth}{@{}p{\datecol}X@{}}
+    \cventryhead{#1}{#2}{#3} \\
+    & #4 \\
+  \end{tabularx}\par\vspace{7pt}%
+}
+\newcommand{\cventry}[4]{%
+  \def\cvbody{#4}%
+  \ifx\cvbody\empty\expandafter\cventryshort\else\expandafter\cventryfull\fi
+  {#1}{#2}{#3}{#4}%
 }
 
-\newcommand{\resumeSubSubheading}[2]{
-    \item
-    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
-      \textit{\small#1} & \textit{\small #2} \\
-    \end{tabular*}\vspace{-7pt}
+% Bullets inside an entry
+\newenvironment{cvitems}{%
+  \begin{itemize}[leftmargin=12pt,nosep,
+                  before={\vspace{-0.45\baselineskip}},
+                  after={\vspace{-\baselineskip}},
+                  label={\textcolor{gray}{\scriptsize$\bullet$}}]\small
+}{\end{itemize}}
+
+% Publication list + entry: {authors. year}{title}{venue}{links}
+\newenvironment{publist}{%
+  \begin{enumerate}[leftmargin=0.38in,itemsep=7pt,topsep=2pt,
+                    label=\arabic*.]\small
+}{\end{enumerate}}
+\newcommand{\pub}[4]{%
+  \item #1\\
+  \textbf{\textit{#2}}\\
+  #3%
+  \ifx\relax#4\relax\else\\ #4\fi
 }
 
-\newcommand{\resumeProjectHeading}[2]{
-    \item
-    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
-      \small#1 & #2 \\
-    \end{tabular*}\vspace{-7pt}
-}
-
-\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
-
-\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
-
-\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
-\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
-\newcommand{\resumeItemListStart}{\begin{itemize}}
-\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
-\newcommand{\link}[2]{{\color{blue}\href{#1}{#2}}}
-\usepackage{marvosym} % For cool symbols.
-\usepackage{hyperref}
-
-%-------------------------------------------
-%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
+%-------------------------------------------------------------------------------
 \begin{document}
 
 %----------HEADING----------
-\begin{center}
-    \textbf{\Huge \scshape Tuan Van Vo} \\ \vspace{1pt}
-    \small Phone: +971504383972, Email: \textcolor{blue}{vovantuan1999a@gmail.com}, Github: \textcolor{blue}{\link{https://github.com/vovantuan1999a}{vovantuan1999a}},\\
-    WebPage: \textcolor{blue}{\link{https://vovantuan1999a.github.io/tuanvovan/}{https://vovantuan1999a.github.io/tuanvovan/}}
-\end{center}
+\noindent
+\begin{tabularx}{\linewidth}{@{}X@{\hspace{10pt}}l@{\hspace{18pt}}l@{}}
+  {\fontsize{20}{22}\selectfont\bfseries TUAN VAN VO} &
+  \small\faGlobe\enspace\link{https://vovantuan1999a.github.io/tuanvovan/}{vovantuan1999a.github.io/tuanvovan} &
+  \small\faEnvelope\enspace\link{mailto:vovantuan1999a@gmail.com}{vovantuan1999a@gmail.com} \\[2pt]
+  \small\textit{Updated on \today} &
+  \small\faGraduationCap\enspace\link{https://scholar.google.com/citations?user=TsjvwzgAAAAJ}{Google Scholar} &
+  \small\faGithub\enspace\link{https://github.com/vovantuan1999a}{GitHub} \\[2pt]
+  & & \small\faPhone\enspace +971\,50\,438\,3972 \\
+\end{tabularx}
 
-%-----------EDUCATION-----------
-\section{Education}
-  \resumeSubHeadingListStart
-    \resumeSubheading
-      {Mohamed Bin Zayed University of Artificial Intelligence (MBZUAI)}{Abu Dhabi, UAE}
-      {PhD in Computer Vision, supervised by \textcolor{blue}{\link{https://scholar.google.com/citations?user=ATkNLcQAAAAJ&hl=en}{Prof. Ian Reid}}}{Sep. 2025 -- Sep. 2029 (Expected)}
-      \vspace{0.2cm}
+%----------EDUCATION----------
+\cvsection{Education}
 
-    \resumeSubheading
-      {Vietnam National University Ho Chi Minh City}{University of Information Technology}
-      {Bachelor of Science in Computer Science}{Aug. 2017 -- June 2021}
-      \resumeItemListStart
-          \resumeItem{First Class with Honors \textbf{(Talented Class – Honors Program)}}
-          \resumeItem{GPA: 8.32/10. \textbf{Honors programs} offer special curricula, privileges, scholarships, and recognition for exceptional undergraduate students.}
-      \resumeItemListEnd
-  \resumeSubHeadingListEnd
-    
+\cventry{9/2025 --}
+  {Ph.D. in Computer Vision}
+  {MBZUAI, Abu Dhabi, UAE}
+  {Mohamed Bin Zayed University of Artificial Intelligence. Expected graduation: 9/2029.\newline
+   Advised by \link{https://mbzuai.ac.ae/academics/faculty-directory/ian-reid}{\textbf{Prof. Ian Reid}}.
+   Full scholarship and stipend.}
 
-% \section{Publication [\textcolor{blue}{\link{https://scholar.google.com/citations?hl=en&view_op=list_works&gmla=AJ1KiT2kYZViu5WRTeT3T_DwJ3-c8WvGe7H1y6a_6kQkzoFO46XPx1KO4YQHikrRfnJoaJoCb8WrBVUK_mlMkmEwMJx0&user=TsjvwzgAAAAJ}{Google Scholar}}]}
-%     \resumeSubHeadingListStart
-%          \item{[6]  \textbf{Tuan Van Vo},  Quang Tan Nguyen, Khang Nguyen, Tran Xuan Nhat, Duy Minh Ho Nguyen, An Thai Le, Vien Anh Ngo, Minh Nhat VU.  ReFineVLA: Multimodal Reasoning-Aware Generalist Robotic Policies via Teacher-Guided Fine-Tuning. 2025. \textcolor{blue}{\link{https://arxiv.org/abs/2505.19080}{Arxiv}}\\ 
-%          }
-%     \resumeSubHeadingListEnd
-%     \resumeSubHeadingListStart
-%          \item{[5] Sy-Tuyen Ho*, \textbf{Tuan Van Vo*}, Ebrahimkhani Somayeh*, and Ngai-Man Cheung. Vision Transformer Neural Architecture Search for Out-of-Distribution Generalization: Benchmark and Insights. In \textit{Conference on Neural Information Processing Systems (NeurIPS)}, 2024. \textcolor{blue}{\link{https://openreview.net/forum?id=2AIwiIkE0s}{Paper}} \textcolor{blue}{\link{https://github.com/vovantuan1999a/OoD-ViT-NAS}{Github (Code)}}\\ 
-%          (*) \textbf{Co-first authors, Equal contribution}}
-%     \resumeSubHeadingListEnd
-    
-%     \resumeSubHeadingListStart
-%          \item{[4] \textbf{Tuan Van Vo}, Minh Nhat Vu, Baoru Huang, Toan Nguyen, Ngan Le, Thieu Vo, Anh Nguyen. Open-Vocabulary Affordance Detection using Knowledge Distillation and Text-Point Correlation. In \textit{IEEE International Conference on Robotics and Automation} (ICRA), 2024. \textbf{Oral Presentation.} \textcolor{blue}{\link{https://ieeexplore.ieee.org/abstract/document/10610247/?casa_token=smq4g_AC3JYAAAAA:zzcw3pq0iaMFGSpubZaTZ-jTuaXFKejEPb9hkU5wuh5izj8enJh0mSVoWGTDJ8AovMWZPvB6nqz7}{Paper}}
-%             \textcolor{blue}{\link{https://github.com/Fsoft-AIC/Open-Vocabulary-Affordance-Detection-using-Knowledge-Distillation-and-Text-Point-Correlation}{Code}}
-%             \textcolor{blue}{\link{https://drive.google.com/file/d/1nfY4RlT41AHQbnuPyuZo9DnwkenWE8qA/view?usp=drive_link}{Video}}}
-%     \resumeSubHeadingListEnd
-    
-%     \resumeSubHeadingListStart
-%          \item{[3] Toan Nguyen, Minh Nhat Vu, Baoru Huang, \textbf{Tuan Van Vo}, Thuy Tuong Vy Truong, Ngan Le, Thieu Vo, Hoai Bac Le, Anh Nguyen. Language-Conditioned Affordance-Pose Detection in 3D Point Clouds. In \textit{IEEE International Conference on Robotics and Automation} (ICRA), 2024. \textbf{Oral Presentation.} 
-%              \textcolor{blue}{\link{https://ieeexplore.ieee.org/abstract/document/10610008/?casa_token=LZr-JqXWwZcAAAAA:tXpXfzfkFh2XowT8ERKRhUHevdXF-NKJN2yEjtpn6aUFSVcZ5STsteWS_d_BBujo6S-db-IjYChD}{Paper}}
-%              \textcolor{blue}{\link{https://github.com/Fsoft-AIC/Language-Conditioned-Affordance-Pose-Detection-in-3D-Point-Clouds}{Code}}
-%             \textcolor{blue}{\link{https://drive.google.com/file/d/1oxkoIKNNlNrE_UiVz4SA1Tcc0061PJnb/view?usp=drive_link}{Video}}}
-%     \resumeSubHeadingListEnd
-    
-%     \resumeSubHeadingListStart
-%          \item{[2] \textbf{Tuan Van Vo}, Minh Nhat Vu, Baoru Huang, An Vuong, Ngan Le, Thieu Vo, and Anh Nguyen. Language-driven Grasp Detection with Mask-guided Attention. In \textit{IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)}, 2024. \textbf{Oral Presentation.} 
-%          \link{https://arxiv.org/abs/2407.19877}{Paper} 
-%          \link{https://github.com/Fsoft-AIC/LGD-MaskedGuideAttention}{Code}}
-%     \resumeSubHeadingListEnd
+\cventry{8/2017 -- 6/2021}
+  {B.Sc. in Computer Science (Honors Program -- Talented Class)}
+  {UIT, VNU-HCM, Vietnam}
+  {University of Information Technology, Vietnam National University Ho Chi Minh City.\newline
+   \textbf{First Class with Honors}. GPA: 8.32/10.}
 
-%     \resumeSubHeadingListStart
-%          \item{[1] Nam Phuong Nguyen$^*$, \textbf{Tuan Van Vo}$^*$, Soan T. M. Duong, Chanh D. Tr. Nguyen, Trung Bui, Steven Q. H. Truong. Dual consistency assisted multi-confident learning for the hepatic vessel segmentation using noisy labels. In \textit{The British Machine Vision Conference (BMVC)}, 2022. \textcolor{blue}{\link{https://bmvc2022.mpi-inf.mpg.de/0725.pdf}{Paper}}
-%             \textcolor{blue}{\link{https://github.com/VinBrainJSC/DualConsistency_Mutil-CL}{Code}}\\
-%             (*) \textbf{Co-first authors, Equal contribution}}
-%     \resumeSubHeadingListEnd
+%----------PUBLICATIONS----------
+\cvsection{Selected Full Papers}
 
+\begin{publist}
+  \pub{Sy-Tuyen Ho$^*$, \me$^*$, Somayeh Ebrahimkhani$^*$, Ngai-Man Cheung. 2024}
+      {Vision Transformer Neural Architecture Search for Out-of-Distribution Generalization: Benchmark and Insights}
+      {Conference on Neural Information Processing Systems (\textbf{NeurIPS 2024}). $^*$Co-first authors.}
+      {\link{https://proceedings.neurips.cc/paper_files/paper/2024/file/9952369f49ecc064d169fe6612cbf204-Paper-Conference.pdf}{paper}\sep
+       \link{https://github.com/vovantuan1999a/OoD-ViT-NAS}{code}}
 
+  \pub{\me, Minh Nhat Vu, Baoru Huang, An Vuong, Ngan Le, Thieu Vo, Anh Nguyen. 2024}
+      {Language-driven Grasp Detection with Mask-guided Attention}
+      {IEEE/RSJ International Conference on Intelligent Robots and Systems (\textbf{IROS 2024}). \hl{Oral Presentation}}
+      {\link{https://arxiv.org/abs/2407.19877}{arxiv}\sep
+       \link{https://github.com/Fsoft-AIC/LGD-MaskedGuideAttention}{code}}
 
+  \pub{\me, Minh Nhat Vu, Baoru Huang, Toan Nguyen, Ngan Le, Thieu Vo, Anh Nguyen. 2024}
+      {Open-Vocabulary Affordance Detection using Knowledge Distillation and Text-Point Correlation}
+      {IEEE International Conference on Robotics and Automation (\textbf{ICRA 2024}). \hl{Oral Presentation}}
+      {\link{https://ieeexplore.ieee.org/abstract/document/10610247}{paper}\sep
+       \link{https://github.com/Fsoft-AIC/Open-Vocabulary-Affordance-Detection-using-Knowledge-Distillation-and-Text-Point-Correlation}{code}\sep
+       \link{https://drive.google.com/file/d/1nfY4RlT41AHQbnuPyuZo9DnwkenWE8qA/view}{video}}
 
-% Add this once in your preamble
-\definecolor{confcolor}{RGB}{204,85,0}
+  \pub{Toan Nguyen, Minh Nhat Vu, Baoru Huang, \me, Thuy Tuong Vy Truong, Ngan Le, Thieu Vo, Hoai Bac Le, Anh Nguyen. 2024}
+      {Language-Conditioned Affordance-Pose Detection in 3D Point Clouds}
+      {IEEE International Conference on Robotics and Automation (\textbf{ICRA 2024}). \hl{Oral Presentation}}
+      {\link{https://ieeexplore.ieee.org/abstract/document/10610008}{paper}\sep
+       \link{https://github.com/Fsoft-AIC/Language-Conditioned-Affordance-Pose-Detection-in-3D-Point-Clouds}{code}\sep
+       \link{https://drive.google.com/file/d/1oxkoIKNNlNrE_UiVz4SA1Tcc0061PJnb/view}{video}}
 
-\section{Publications and Under Submissions [\textcolor{blue}{\link{https://scholar.google.com/citations?user=TsjvwzgAAAAJ}{Google Scholar}}]}
+  \pub{Nam Phuong Nguyen$^*$, \me$^*$, Soan T.\,M. Duong, Chanh D.\,Tr. Nguyen, Trung Bui, Steven Q.\,H. Truong. 2022}
+      {Dual Consistency Assisted Multi-Confident Learning for Hepatic Vessel Segmentation using Noisy Labels}
+      {British Machine Vision Conference (\textbf{BMVC 2022}). $^*$Co-first authors.}
+      {\link{https://bmvc2022.mpi-inf.mpg.de/0725.pdf}{paper}\sep
+       \link{https://github.com/VinBrainJSC/DualConsistency_Mutil-CL}{code}}
+\end{publist}
 
-\subsection*{Publications}
-\resumeSubHeadingListStart
-\item{[7] Duy Le Dinh Anh, Patrick Amadeus Irawan, \textbf{Tuan Van Vo}. Counting to Four is still a Chore for VLMs. In \textcolor{confcolor}{\textit{CVPR 2026 Workshops -- The 5th Workshop on Multimodal Foundation Models}}, 2026. \textcolor{blue}{\link{https://openaccess.thecvf.com/content/CVPR2026W/MMFM5/papers/Le_Dinh_Anh_Counting_to_Four_is_still_a_Chore_for_VLMs_CVPRW_2026_paper.pdf}{Paper}}}
+\cvsection{Preprints \& Under Review}
 
-\item{[6] Tudor Jianu, Baoru Huang, \textbf{Tuan Van Vo}, ..., Olatunji Omisore, Pierre Berthet-Rayne, Sebastiano Fichera, Anh Nguyen. Autonomous Catheterization with Open-source Simulator and Expert Trajectory. In \textcolor{confcolor}{\textit{Handbook of Robotic and Image-Guided Surgery}}, 2026. \textcolor{blue}{\link{https://arxiv.org/abs/2401.09059}{Paper}} \textcolor{blue}{\link{https://github.com/airvlab/cathsim}{Code}}}
+\begin{publist}
+  \pub{An Dinh Vuong$^*$, \me$^*$, Abdullah Sohail, Haoran Ding, Liang Ma, Xiaodan Liang, Anqing Duan, Ivan Laptev, Ian Reid. 2026}
+      {World2Act: Latent Action Post-Training via Skill-Compositional World Models}
+      {Under review. $^*$Co-first authors.}
+      {\link{https://arxiv.org/abs/2603.10422}{arxiv}\sep
+       \link{https://wm2act.github.io/}{project page}}
 
-\item{[5] Sy-Tuyen Ho$^*$, \textbf{Tuan Van Vo}$^*$, Somayeh Ebrahimkhani$^*$, Ngai-Man Cheung. Vision Transformer Neural Architecture Search for Out-of-Distribution Generalization: Benchmark and Insights. In \textcolor{confcolor}{\textit{Conference on Neural Information Processing Systems (NeurIPS)}}, 2024. \textcolor{blue}{\link{https://proceedings.neurips.cc/paper_files/paper/2024/file/9952369f49ecc064d169fe6612cbf204-Paper-Conference.pdf}{Paper}} \textcolor{blue}{\link{https://github.com/vovantuan1999a/OoD-ViT-NAS}{Code}}. $^*$\textbf{First authors.}}
+  \pub{\me, Quang Tan Nguyen, Khang Nguyen, Tran Xuan Nhat, Duy Minh Ho Nguyen, An Thai Le, Vien Anh Ngo, Minh Nhat Vu. 2025}
+      {ReFineVLA: Multimodal Reasoning-Aware Generalist Robotic Policies via Teacher-Guided Fine-Tuning}
+      {Under review.}
+      {\link{https://arxiv.org/abs/2505.19080}{arxiv}}
 
-\item{[4] \textbf{Tuan Van Vo}, Minh Nhat Vu, Baoru Huang, Toan Nguyen, Ngan Le, Thieu Vo, Anh Nguyen. Open-Vocabulary Affordance Detection using Knowledge Distillation and Text-Point Correlation. In \textcolor{confcolor}{\textit{IEEE International Conference on Robotics and Automation (ICRA)}}, 2024. \textcolor{confcolor}{\textbf{Oral Presentation.}} \textcolor{blue}{\link{https://ieeexplore.ieee.org/abstract/document/10610247}{Paper}} \textcolor{blue}{\link{https://github.com/Fsoft-AIC/Open-Vocabulary-Affordance-Detection-using-Knowledge-Distillation-and-Text-Point-Correlation}{Code}} \textcolor{blue}{\link{https://drive.google.com/file/d/1nfY4RlT41AHQbnuPyuZo9DnwkenWE8qA/view}{Video}}}
+  \pub{Baoru Huang$^*$, \me$^*$, Chayun Kongtongvattana, Anh Nguyen. 2024}
+      {CathAction: A Benchmark for Endovascular Intervention Understanding}
+      {Under review. $^*$Co-first authors.}
+      {\link{https://arxiv.org/abs/2408.13126}{arxiv}}
+\end{publist}
 
-\item{[3] Toan Nguyen, Minh Nhat Vu, Baoru Huang, \textbf{Tuan Van Vo}, Thuy Tuong Vy Truong, Ngan Le, Thieu Vo, Hoai Bac Le, Anh Nguyen. Language-Conditioned Affordance-Pose Detection in 3D Point Clouds. In \textcolor{confcolor}{\textit{IEEE International Conference on Robotics and Automation (ICRA)}}, 2024. \textcolor{confcolor}{\textbf{Oral Presentation.}} \textcolor{blue}{\link{https://ieeexplore.ieee.org/abstract/document/10610008}{Paper}} \textcolor{blue}{\link{https://github.com/Fsoft-AIC/Language-Conditioned-Affordance-Pose-Detection-in-3D-Point-Clouds}{Code}} \textcolor{blue}{\link{https://drive.google.com/file/d/1oxkoIKNNlNrE_UiVz4SA1Tcc0061PJnb/view}{Video}}}
+\cvsection{Workshop Papers \& Book Chapters}
 
-\item{[2] \textbf{Tuan Van Vo}, Minh Nhat Vu, Baoru Huang, An Vuong, Ngan Le, Thieu Vo, Anh Nguyen. Language-driven Grasp Detection with Mask-guided Attention. In \textcolor{confcolor}{\textit{IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)}}, 2024. \textcolor{confcolor}{\textbf{Oral Presentation.}} \textcolor{blue}{\link{https://arxiv.org/abs/2407.19877}{Paper}} \textcolor{blue}{\link{https://github.com/Fsoft-AIC/LGD-MaskedGuideAttention}{Code}}}
+\begin{publist}
+  \pub{Duy Le Dinh Anh, Patrick Amadeus Irawan, \me. 2026}
+      {Counting to Four is still a Chore for VLMs}
+      {CVPR 2026 Workshops -- 5th Workshop on Multimodal Foundation Models (\textbf{CVPRW 2026}).}
+      {\link{https://openaccess.thecvf.com/content/CVPR2026W/MMFM5/papers/Le_Dinh_Anh_Counting_to_Four_is_still_a_Chore_for_VLMs_CVPRW_2026_paper.pdf}{paper}}
 
-\item{[1] Nam Phuong Nguyen$^*$, \textbf{Tuan Van Vo}$^*$, Soan T. M. Duong, Chanh D. Tr. Nguyen, Trung Bui, Steven Q. H. Truong. Dual Consistency Assisted Multi-Confident Learning for Hepatic Vessel Segmentation using Noisy Labels. In \textcolor{confcolor}{\textit{British Machine Vision Conference (BMVC)}}, 2022. \textcolor{blue}{\link{https://bmvc2022.mpi-inf.mpg.de/0725.pdf}{Paper}} \textcolor{blue}{\link{https://github.com/VinBrainJSC/DualConsistency_Mutil-CL}{Code}}. $^*$\textbf{First authors.}}
+  \pub{Tudor Jianu, Baoru Huang, \me, \ldots, Olatunji Omisore, Pierre Berthet-Rayne, Sebastiano Fichera, Anh Nguyen. 2026}
+      {Autonomous Catheterization with Open-source Simulator and Expert Trajectory}
+      {Book chapter in \textbf{Handbook of Robotic and Image-Guided Surgery}.}
+      {\link{https://arxiv.org/abs/2401.09059}{arxiv}\sep
+       \link{https://github.com/airvlab/cathsim}{code}}
+\end{publist}
 
-\resumeSubHeadingListEnd
-\vspace{-0.3cm}
-\subsection*{Preprints}
-\resumeSubHeadingListStart
-\item{[10] An Dinh Vuong$^*$, \textbf{Tuan Van Vo}$^*$, Abdullah Sohail, Haoran Ding, Liang Ma, Xiaodan Liang, Anqing Duan, Ivan Laptev, Ian Reid. World2Act: Latent Action Post-Training via Skill-Compositional World Models. \textcolor{confcolor}{\textit{Under review}}, 2026. \textcolor{blue}{\link{https://arxiv.org/abs/2603.10422}{arXiv}} \textcolor{blue}{\link{https://wm2act.github.io/}{Project Page}}. $^*$\textbf{First authors.}}
+\cvsection{Patents}
 
-\item{[9] \textbf{Tuan Van Vo}, Quang Tan Nguyen, Khang Nguyen, Tran Xuan Nhat, Duy Minh Ho Nguyen, An Thai Le, Vien Anh Ngo, Minh Nhat Vu. ReFineVLA: Multimodal Reasoning-Aware Generalist Robotic Policies via Teacher-Guided Fine-Tuning. \textcolor{confcolor}{\textit{Under review}}, 2025. \textcolor{blue}{\link{https://arxiv.org/abs/2505.19080}{arXiv}}}
+\begin{publist}
+  \pub{Somayya Ebrahimkhani, Ngai-Man Cheung, BingSheng Jonathan Zheng, Chun Yong Andrew Ngo, Le Hoang Anh, \me, U-Xuan Tan. 2026}
+      {Machine Learning Model for Plastic Type Classification}
+      {PCT Application \textbf{WO2026071978A1} (pending).}
+      {\link{https://patents.google.com/patent/WO2026071978A1/en}{Google Patents}}
+\end{publist}
 
-\item{[8] Baoru Huang$^*$, \textbf{Tuan Van Vo}$^*$, Chayun Kongtongvattana, Anh Nguyen. CathAction: A Benchmark for Endovascular Intervention Understanding. \textcolor{confcolor}{\textit{Under review}}, 2024. \textcolor{blue}{\link{https://arxiv.org/abs/2408.13126}{arXiv}}. $^*$\textbf{First authors.}}
+%----------HONORS----------
+\cvsection{Honors \& Awards}
 
-\resumeSubHeadingListEnd
-\vspace{-0.3cm}
-\subsection*{Patents}
-\resumeSubHeadingListStart
-\item{[P1] Somayya Ebrahimkhani, Ngai-Man Cheung, BingSheng Jonathan Zheng, Chun Yong Andrew Ngo, Le Hoang Anh, \textbf{Tuan Van Vo}, U-Xuan Tan. Machine Learning Model for Plastic Type Classification. \textcolor{confcolor}{\textit{PCT Application WO2026071978A1 (pending)}}, 2026. \textcolor{blue}{\link{https://patents.google.com/patent/WO2026071978A1/en}{Patent}}}
+\cventry{2025 -- 2029}
+  {Full PhD Scholarship and Stipend, MBZUAI}{}
+  {Full tuition and living stipend for doctoral study at Mohamed Bin Zayed University of Artificial Intelligence.}
 
-\resumeSubHeadingListEnd
+\cventry{2020, 2021}
+  {Rosen Scholarship}{}{}
 
+\cventry{2018, 2019}
+  {UIT Study Scholarship, University of Information Technology, VNU-HCM}{}{}
 
+\cventry{2017 -- 2021}
+  {Honors Program (Talented Class), University of Information Technology, VNU-HCM}{}
+  {Selective program offering special curricula, scholarships and recognition for exceptional undergraduate students.}
 
+\cventry{2019}
+  {ICPC Vietnam National Programming Contest}{}
+  {Participant.}
 
+%----------EXPERIENCE----------
+\cvsection{Experience}
 
+\cventry{4/2025 -- 8/2025}
+  {\textit{Principal Research Engineer (Founding Team Member)}, VinRobotics, Vingroup}{Vietnam}
+  {\begin{cvitems}
+    \item Research focus: \textbf{foundation models for Vision-Language-Action (VLA)} in robotics.
+    \item Lead scientist developing large-scale multimodal VLA models that integrate vision, natural language and action planning for next-generation robots.
+  \end{cvitems}}
 
-\section{Academic Services}
-    \resumeSubHeadingListStart
-    \resumeSubheading
-      {Reviewer Services - Journal and Conference Reviewer}{}
-      {}{}
-      \vspace{-0.6cm}
-      \resumeItemListStart
-      \resumeItem{Reviewer for TMM-24, ICRA-25, IROS-25, CoRL-25, CoRL-26}
-      \resumeItemListEnd
-    \resumeSubHeadingListEnd
-    
+\cventry{9/2023 -- 3/2025}
+  {\textit{Research Assistant}, Singapore University of Technology and Design}{Singapore}
+  {\begin{cvitems}
+    \item Research focus: zero-shot neural architecture search.
+    \item Led work on Vision Transformer NAS for out-of-distribution generalization (full paper at \textbf{NeurIPS 2024}).
+  \end{cvitems}}
 
-\section{Work Experience}
-  \resumeSubHeadingListStart
-   % \vspace{5mm}
+\cventry{7/2022 -- 6/2024}
+  {\textit{AI Research Resident}, FPT Software AI Center}{Vietnam}
+  {\begin{cvitems}
+    \item Research focus: multimodal robot learning (language-driven grasping and 3D affordance detection).
+    \item Resulted in \textbf{two oral papers at ICRA 2024} and \textbf{one oral paper at IROS 2024}.
+  \end{cvitems}}
 
-    \resumeSubheading
-      {\textcolor{confcolor}{\textbf{Research Lab Experience}}}{}{}{}
-    \vspace{-0.6cm}
-    \resumeSubheading
-      {Singapore University of Technology and Design, Singapore}{Sept. 2023 -- Mar. 2025}
-      {\textbf{Research Assistant}} {}
-      \resumeItemListStart
-      \resumeItem{Research focus: Zero-Shot Neural Architecture Search}
-      \resumeItem{Vision Transformer Neural Architecture Search for Out-of-Distribution Generalization, \textbf{resulting in a publication at NeurIPS 2024}}
-      \resumeItemListEnd
-    
-    \vspace{2mm}
-    \resumeSubheading
-      {FPT Software AI Center}{July. 2022 -- June. 2024}
-      {\textbf{AI Research Residency}} {}
-      \resumeItemListStart
-      \resumeItem{Research focus: Multimodal Robot Learning}
-      \resumeItem{\textbf{Resulted in two publications at ICRA 2024 and one at IROS 2024}}
-      \resumeItemListEnd
-      
-    \vspace{2mm}
-    \resumeSubheading
-      {MMLab - UIT}{Oct. 2019 -- May 2021}
-      {\textbf{Research Assistant}, University of Information Technology (UIT) - VNUHCM}{}
-      \resumeItemListStart
-      \resumeItem{Research Thesis: Violence Detection in Video Surveillance Using a Deep Multiple Instance Learning Ranking Approach
-      (\textcolor{blue}{\link{https://drive.google.com/file/d/1p_yap1vRivDxcnIOtcySKQjHD0818yhq/view?usp=sharing}{PDF}})}
-      \resumeItemListEnd
+\cventry{6/2022 -- 8/2023}
+  {\textit{Senior Computer Vision Research Engineer}, MoMo (M-Service JSC)}{Vietnam}
+  {\begin{cvitems}
+    \item Designed computer vision models for the eKYC system of the MoMo app: face anti-spoofing, object detection, OCR, deepfake detection, fraud detection and document understanding.
+    \item Achieved \textbf{99\% accuracy} at low latency, serving \textbf{nearly 40 million users} at about 45 RPS.
+    \item The eKYC system is trusted and used by the \textbf{Apple Online Store in Vietnam}.
+  \end{cvitems}}
 
-    \vspace{3mm}
-    \resumeSubheading
-      {\textcolor{confcolor}{\textbf{Industry Experience}}}{}{}{}
-    \vspace{-0.55cm}
-    \resumeSubheading
-  {VinRobotics, Vingroup Corporation}{April. 2025 -- Aug. 2025}
-  {\textbf{Principal Research Engineer (Founding Team Member)}}{Vietnam}
-  \resumeItemListStart
-    \resumeItem{Research focus: Foundation Models for Vision-Language-Action (VLA) in robotics.}
-    \resumeItem{Lead scientist developing large-scale multimodal VLA models that integrate vision, natural language, and action planning for next-generation robotics at VinRobotics.}
-    % \resumeItem{\textbf{Resulted in a TMLR submission currently under review.}}
-  \resumeItemListEnd
+\cventry{5/2021 -- 5/2022}
+  {\textit{Applied Scientist}, VinBrain (acquired by NVIDIA)}{Vietnam}
+  {\begin{cvitems}
+    \item Built AI for medical segmentation and diagnosis (3D MRI/CT rectal tumor segmentation, liver vessel segmentation) and for smart-city surveillance (pet and covered-face detection).
+    \item Delivered all models to products assisting doctors; surveillance models deployed across VinHomes residential areas.
+    \item Research resulted in a full paper at \textbf{BMVC 2022}.
+  \end{cvitems}}
 
-\vspace{2mm}
-    \resumeSubheading
-      {MoMo (M-Service JSC)}{June. 2022 -- August. 2023}
-      {\textbf{Senior Computer Vision Research Engineer}}{}
-     \resumeItemListStart
-      \resumeItem{Researched and developed AI solutions, specifically designing computer vision models for the eKYC system of the MoMo app}
-      \resumeItem{Designed and implemented Face Anti-Spoofing, Object Detection, OCR, Deep-Fake Detection, Fraud Detection, and Document Understanding models}
-      \resumeItem{Achieved a 99\% accuracy rate with low latency, serving nearly 40 million users at about 45 RPS}
-      \resumeItem{\textbf{These AI eKYC systems have gained trust and are utilized by the Apple Online Store in Vietnam}}
-      \resumeItemListEnd
-    
-    \vspace{2mm}
-    \resumeSubheading
-      {VinBrain (Acquired by NVIDIA)}{May. 2021 -- May. 2022}
-      {\textbf{Applied Scientist}}{}
-     \resumeItemListStart
-      \resumeItem{Conducted research and development of AI for medical segmentation and diagnostic tasks, as well as AI for Smart City and Smart Home solutions}
-      \resumeItem{Designed models for 3D MRI CT-Rectal Tumor Segmentation, Liver Vessel Segmentation, Pet Detection, and Coverface Detection on surveillance cameras}
-      \resumeItem{Successfully delivered all AI models to products to assist doctors. In the surveillance camera project, the AI models were also successfully delivered and deployed at VinHome residential areas for camera-AI based surveillance}
-      \resumeItem{Performed in-depth research and targeted academic papers for prestigious AI conferences, \textbf{resulting in a publication at BMVC 2022}}
-      \resumeItemListEnd
-    
-    \vspace{2mm}
-    \resumeSubheading
-      {FPT Software}{May. 2020 -- May. 2021}
-      {\textbf{AI Engineer - Technical Lead of Healthcare Projects}}{}
-      \resumeItemListStart
-      \resumeItem{Designed and implemented cutting-edge AI solutions for healthcare in the Japanese market, addressing customer requirements related to model design, logic, evaluation, and reporting}
-      \resumeItem{Designed models for semantic segmentation of dental X-rays and classification of 72 implant types}
-      \resumeItem{Successfully delivered all AI models to the customer}
+\cventry{5/2020 -- 5/2021}
+  {\textit{AI Engineer -- Technical Lead of Healthcare Projects}, FPT Software}{Vietnam}
+  {\begin{cvitems}
+    \item Led AI healthcare solutions for the Japanese market, covering model design, logic, evaluation and reporting.
+    \item Built models for semantic segmentation of dental X-rays and \textbf{classification of 72 implant types}; delivered all models to the customer.
+  \end{cvitems}}
 
-      \resumeItemListEnd
+\cventry{10/2019 -- 5/2021}
+  {\textit{Research Assistant}, MMLab -- University of Information Technology, VNU-HCM}{Vietnam}
+  {\begin{cvitems}
+    \item Thesis: Violence Detection in Video Surveillance Using a Deep Multiple Instance Learning Ranking Approach
+          (\link{https://drive.google.com/file/d/1p_yap1vRivDxcnIOtcySKQjHD0818yhq/view?usp=sharing}{PDF}).
+  \end{cvitems}}
 
-  \resumeSubHeadingListEnd
+%----------SERVICE----------
+\cvsection{Professional Service}
 
+\cventry{2024 --}
+  {Reviewer}{}
+  {IEEE Transactions on Multimedia (TMM 2024), ICRA 2025, IROS 2025, CoRL 2025, CoRL 2026.}
 
+%----------TALKS----------
+\cvsection{Presentations}
 
+\cventry{5/2024}
+  {ICRA 2024, Yokohama, Japan}{}
+  {Two oral presentations on open-vocabulary affordance detection and language-conditioned affordance-pose detection.}
 
-\section{Scholarship and Activities}
- \begin{itemize}[leftmargin=0.15in, label={}]
-    \small{\item{
-     Full Scholarship and Stipend for PhD Study at Mohamed Bin Zayed University of Artificial Intelligence (MBZUAI) \\
-     Rosen Scholarship 2020 \& 2021 \\
-     UIT-Study Scholarships 2018 \& 2019 \\
-     Participated in the ICPC 2019 Vietnam National Programming Contest \\
-     Attended and presented two oral papers at ICRA 2024, Yokohama, Japan
-    }}
- \end{itemize}
-% \newpage
-% \resumeSubHeadingListEnd
+%----------SKILLS----------
+\cvsection{Skills}
 
+\small
+\begin{tabularx}{\linewidth}{@{}p{\datecol}X@{}}
+  \textbf{Programming} & Python, C/C++, SQL \\[2pt]
+  \textbf{AI \& Training} & PyTorch, TensorFlow, Keras, OpenCV, CUDA basics; large-scale distributed training of VLA, VLM, LLM, MLLM, video generation and video world models \\[2pt]
+  \textbf{Robotics} & ROS, robotic system deployment, teleoperation-based data collection \\[2pt]
+  \textbf{Tools} & Linux, Docker, Google Cloud, Git, Jupyter, BigQuery, Oracle, \LaTeX \\[2pt]
+  \textbf{Languages} & Vietnamese (native), English (fluent) \\
+\end{tabularx}
+\normalsize
 
-\section{Skills}
- \begin{itemize}[leftmargin=0.15in, label={}]
-    \small{\item{
-     \textbf{Programming Languages}{: Python, C/C++, SQL} \\
-     \textbf{AI Frameworks and Model Training}{: PyTorch, TensorFlow, Keras, OpenCV, CUDA basics; experienced in large-scale distributed training of VLA, VLM, LLM, MLLM, Video Generation, and Video World models} \\
-     \textbf{Robotics and Deployment}{: ROS, robotic system deployment, teleoperation-based data collection} \\
-     \textbf{Tools and Platforms}{: Linux, Docker, Google Cloud, Jupyter Notebook/Lab, Git, BigQuery, Oracle} \\
-     \textbf{Languages}{: English, Vietnamese (native)}\\
-     \textbf{Typography}{: LaTeX}\\
-     % \textbf{Other}: \\
-    }}
- \end{itemize}
+%----------REFERENCES----------
+\cvsection{References}
 
+\small
+\begin{tabularx}{\linewidth}{@{}X@{\hspace{16pt}}X@{}}
+  \textbf{Prof. Ian Reid} (PhD advisor) &
+  \textbf{Prof. Anh Nguyen} \\
+  Department Chair \& Professor of Computer Vision, MBZUAI; Acting Director of Research Administration &
+  Associate Professor, University of Liverpool; Director, Smart Robotic Lab \\
+  \link{mailto:Ian.Reid@mbzuai.ac.ae}{Ian.Reid@mbzuai.ac.ae}\sep
+  \link{https://scholar.google.com/citations?user=ATkNLcQAAAAJ}{Scholar}\sep
+  \link{https://mbzuai.ac.ae/academics/faculty-directory/ian-reid}{Homepage} &
+  \link{mailto:anh.nguyen@liverpool.ac.uk}{anh.nguyen@liverpool.ac.uk}\sep
+  \link{https://scholar.google.com/citations?user=gEbaF0sAAAAJ}{Scholar}\sep
+  \link{https://www.csc.liv.ac.uk/~anguyen/}{Homepage} \\[8pt]
 
+  \textbf{Prof. Ngai-Man (Man) Cheung} &
+  \textbf{Prof. Thieu N. Vo} \\
+  Associate Professor, SUTD; Associate Pillar Head (Education) &
+  Assistant Professor, Department of Computer Science, University of Bath \\
+  \link{mailto:ngaiman_cheung@sutd.edu.sg}{ngaiman\_cheung@sutd.edu.sg}\sep
+  \link{https://scholar.google.com/citations?user=vJQArFkAAAAJ}{Scholar}\sep
+  \link{https://sites.google.com/site/mancheung0407/}{Homepage} &
+  \link{mailto:ntv22@bath.ac.uk}{ntv22@bath.ac.uk}\sep
+  \link{https://scholar.google.com/citations?user=CM2qJSoAAAAJ}{Scholar} \\[8pt]
 
+  \textbf{Prof. Baoru Huang} & \\
+  Assistant Professor, Department of Computer Science, University of Liverpool & \\
+  \link{mailto:bh1518@ic.ac.uk}{bh1518@ic.ac.uk}\sep
+  \link{https://scholar.google.com/citations?user=unbPvWAAAAAJ}{Scholar}\sep
+  \link{https://baoru.netlify.app/}{Homepage} & \\
+\end{tabularx}
+\normalsize
 
-% \vspace{5mm}
-% \section{References}
-%     \begin{tabular}{lr}
-%     % Referee 1
-%     \begin{minipage}[t]{4.in}
-%     \textcolor{blue}{\link{https://www.csc.liv.ac.uk/~anguyen/}{Prof. Anh Nguyen}}\\
-%     University of Liverpool, United Kingdom\\
-%     Associate Professor\\
-%     Director of the Smart Robotic Lab\\
-%     Department of Computer Science\\
-%     \Letter\ \href{mailto:anh.nguyen@liverpool.ac.uk}{anh.nguyen\textrm{@}liverpool.ac.uk}
-%     \end{minipage}
-%     &
-%     % \begin{minipage}[t]{4.in}
-%     % \textcolor{blue}{\link{https://uark-aicv.github.io/team/ngan_le.html}{Prof. Ngan Le}}\\
-%     % University of Arkansas\\
-%     % Assistant Professor\\
-%     % Director of the AICV Lab\\
-%     % Department of Computer Science\\
-%     % \Letter\ \href{mailto:thile@uark.edu}{thile\textrm{@}uark.edu}
-%     % \end{minipage}
-%     \begin{minipage}[t]{4.in}
-%     \textcolor{blue}{\link{https://scholar.google.com/citations?user=CM2qJSoAAAAJ&hl=en}{Prof. Thieu N. Vo}}\\
-%     University of Bath, United Kingdom\\
-%     Assistant Professor\\
-%     Department of Computer Science\\
-%     \Letter\ \href{mailto:ntv22@bath.ac.uk}{ntv22\textrm{@}bath.ac.uk}
-%     \end{minipage}
-%     \\
-%     % \\ % Additional newline for spacing.
-%     % \begin{minipage}[t]{4.in}
-%     % \textcolor{blue}{\link{https://scholar.google.com/citations?user=qyExc4QAAAAJ&hl=en}{Dr. Minh Nhat VU}}\\
-%     % Austrian Institute of Technology \& TU Wien\\
-%     % Scientist \& Postdoctoral Research Fellow\\
-%     % Automation \& Control Institute\\
-%     % \Letter\ \href{mailto:vu@acin.tuwien.ac.at}{vu\textrm{@}acin.tuwien.ac.at}
-%     % \end{minipage}
-%     % &
-    
-%     \end{tabular}
-\section{References}
-\begin{itemize}[leftmargin=0.15in]
-    \item \textbf{Prof. Ian Reid}\\
-    Department Chair and Professor of Computer Vision at MBZUAI\\
-    Acting Director of Research Administration at MBZUAI\\
-    \textbf{Email} \quad \href{mailto:Ian.Reid@mbzuai.ac.ae}{Ian.Reid@mbzuai.ac.ae}\\
-    \textbf{Google Scholar} \quad \url{https://scholar.google.com/citations?user=ATkNLcQAAAAJ&hl=en}\\
-    \textbf{Homepage} \quad \url{https://mbzuai.ac.ae/study/faculty/ian-reid/}
-
-    \vspace{1mm}
-    \item \textbf{Prof. Anh Nguyen}\\
-    Associate Professor at the University of Liverpool\\
-    Director of the Smart Robotic Lab, Department of Computer Science\\
-    \textbf{Email} \quad \href{mailto:anh.nguyen@liverpool.ac.uk}{anh.nguyen@liverpool.ac.uk}\\
-    \textbf{Google Scholar} \quad \url{https://scholar.google.com/citations?user=gEbaF0sAAAAJ&hl=en}\\
-    \textbf{Homepage} \quad \url{https://www.csc.liv.ac.uk/~anguyen/}
-
-    \vspace{1mm}
-    \item \textbf{Prof. Ngai-Man (Man) Cheung}\\
-    Associate Professor at the Singapore University of Technology and Design (SUTD)\\
-    Associate Pillar Head (Education)\\
-    \textbf{Email} \quad \href{mailto:ngaiman_cheung@sutd.edu.sg}{ngaiman\_cheung@sutd.edu.sg}\\
-    \textbf{Google Scholar} \quad \url{https://scholar.google.com/citations?user=vJQArFkAAAAJ&hl=en}\\
-    \textbf{Homepage} \quad \url{https://sites.google.com/site/mancheung0407/}
-    
-    \vspace{1mm}
-    \item \textbf{Prof. Thieu N. Vo}\\
-    Assistant Professor at the University of Bath\\
-    Department of Computer Science.\\
-    \textbf{Email} \quad \href{mailto:ntv22@bath.ac.uk}{ntv22@bath.ac.uk}\\
-    \textbf{Google Scholar} \quad \url{https://scholar.google.com/citations?user=CM2qJSoAAAAJ&hl=en}
-
-    \vspace{1mm}
-    \item \textbf{Prof. Baoru Huang}\\
-    Assistant Professor at the University of Liverpool\\
-    Department of Computer Science\\
-    \textbf{Email} \quad \href{mailto:bh1518@ic.ac.uk}{bh1518@ic.ac.uk}\\
-    \textbf{Google Scholar} \quad \url{https://scholar.google.com/citations?user=unbPvWAAAAAJ&hl=zh-EN}\\
-    \textbf{Homepage} \quad \url{https://baoru.netlify.app/}
-\end{itemize}
 \end{document}
