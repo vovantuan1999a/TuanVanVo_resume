@@ -31,6 +31,7 @@
 % Vector icons from Font Awesome Free (CC BY 4.0, https://fontawesome.com/license/free),
 % embedded as TikZ paths so they render with any compiler and need no font package.
 \usepackage{tikz}
+\usepackage{graphicx}
 % \cvicon{width}{height}{path}: draws the icon in its native box, scaled to text height
 \newcommand{\cvicon}[3]{\raisebox{-0.17em}{\resizebox{!}{1.05em}{%
   \tikz[x=1pt,y=-1pt]{\path (0,0) rectangle (#1,#2); \fill #3;}}}}
@@ -39,6 +40,17 @@
 \newcommand{\iconGithub}{\cvicon{512}{512}{(216.5,362.5)..controls(150.5,354.5)and(104,307)..(104,245.5)..controls(104,220.5)and(113,193.5)..(128,175.5)..controls(121.5,159)and(122.5,124)..(130,109.5)..controls(150,107)and(177,117.5)..(193,132)..controls(212,126)and(232,123)..(256.5,123)..controls(281,123)and(301,126)..(319,131.5)..controls(334.5,117.5)and(362,107)..(382,109.5)..controls(389,123)and(390,158)..(383.5,175)..controls(399.5,194)and(408,219.5)..(408,245.5)..controls(408,307)and(361.5,353.5)..(294.5,362)..controls(311.5,373)and(323,397)..(323,424.5)--(323,476.5)..controls(323,491.5)and(335.5,500)..(350.5,494)..controls(441,459.5)and(512,369)..(512,257)..controls(512,115.5)and(397,0)..(255.5,0)..controls(114,0)and(0,115.5)..(0,257)..controls(0,368)and(70.5,460)..(165.5,494.5)..controls(179,499.5)and(192,490.5)..(192,477)--(192,437)..controls(185,440)and(176,442)..(168,442)..controls(135,442)and(115.5,424)..(101.5,390.5)..controls(96,377)and(90,369)..(78.5,367.5)..controls(72.5,367)and(70.5,364.5)..(70.5,361.5)..controls(70.5,355.5)and(80.5,351)..(90.5,351)..controls(105,351)and(117.5,360)..(130.5,378.5)..controls(140.5,393)and(151,399.5)..(163.5,399.5)..controls(176,399.5)and(184,395)..(195.5,383.5)..controls(204,375)and(210.5,367.5)..(216.5,362.5)--cycle}}
 \newcommand{\iconPhone}{\cvicon{512}{512}{(160.2,25)..controls(152.3,6.1)and(131.7,-3.9)..(112.1,1.4)--(106.6,2.9)..controls(42,20.5)and(-13.2,83.1)..(2.9,159.3)..controls(40,334.3)and(177.7,472)..(352.7,509.1)..controls(429,525.3)and(491.5,470)..(509.1,405.4)--(510.6,399.9)..controls(516,380.2)and(505.9,359.6)..(487.1,351.8)--(389.8,311.3)..controls(373.3,304.4)and(354.2,309.2)..(342.8,323.1)--(304.2,370.3)..controls(233.9,335.4)and(177.3,277)..(144.8,205.3)--(189,169.3)..controls(202.9,158)and(207.6,138.9)..(200.8,122.3)--(160.2,25)--cycle}}
 \newcommand{\iconScholar}{\cvicon{512}{512}{(390.9,298.5)..controls(390.9,298.5)and(390.9,298.6)..(391,298.6)..controls(400.2,318)and(405.4,339.7)..(405.4,362.6)..controls(405.3,445.1)and(338.5,512)..(256,512)..controls(173.5,512)and(106.7,445.1)..(106.7,362.7)..controls(106.7,339.8)and(111.9,318.1)..(121.1,298.7)..controls(122.8,295.1)and(124.7,291.5)..(126.7,288)..controls(131.1,280.4)and(136.1,273.3)..(141.7,266.7)..controls(169.1,234.1)and(210.2,213.4)..(256.1,213.4)..controls(289.7,213.4)and(320.7,224.5)..(345.7,243.3)..controls(354.8,250.2)and(363.1,258)..(370.5,266.8)..controls(376.1,273.4)and(381.1,280.6)..(385.5,288.1)..controls(387.5,291.5)and(389.3,295.1)..(391,298.6)--(390.9,298.5)--cycle(417.3,279.7)..controls(387.2,221.3)and(326.3,181.3)..(256,181.3)..controls(185.7,181.3)and(124.8,221.3)..(94.7,279.7)--(-0,202.7)--(256,0)--(512,202.7)--(417.3,279.8)--(417.3,279.7)--cycle}}
+
+%----------PHOTO SWITCH----------
+% \showphototrue  -> headshot in the header (needs photo.jpg in the project)
+% \showphotofalse -> no photo (recommended for US/UK applications)
+\newif\ifshowphoto
+\showphototrue
+\newcommand{\photosize}{0.95in}
+\newcommand{\cvphoto}{%
+  \tikz\node[circle,draw=gray!40,line width=0.6pt,inner sep=0pt,minimum size=\photosize,
+    path picture={\node at (path picture bounding box.center)
+      {\includegraphics[width=\photosize]{photo.jpg}};}]{};}
 
 %----------COLORS----------
 \definecolor{linkblue}{RGB}{58,110,165}
@@ -122,15 +134,21 @@
 
 %----------HEADING----------
 \noindent
-\begin{tabularx}{\linewidth}{@{}X@{\hspace{10pt}}l@{\hspace{18pt}}l@{}}
+\ifshowphoto
+  \begin{minipage}[c]{\dimexpr\photosize+1pt\relax}\cvphoto\end{minipage}\hspace{14pt}%
+  \begin{minipage}[c]{\dimexpr\linewidth-\photosize-15pt\relax}
+\fi
+\ifshowphoto\let\contactsize\footnotesize\else\let\contactsize\small\fi
+\begin{tabular*}{\linewidth}{@{}l@{\extracolsep{\fill}}l@{\hspace{14pt}}l@{}}
   {\fontsize{20}{22}\selectfont\bfseries TUAN VAN VO} &
-  \small\iconGlobe\hspace{0.6em}\link{https://vovantuan1999a.github.io/tuanvovan/}{vovantuan1999a.github.io/tuanvovan} &
-  \small\iconEnvelope\hspace{0.6em}\link{mailto:vovantuan1999a@gmail.com}{vovantuan1999a@gmail.com} \\[2pt]
+  \contactsize\iconGlobe\hspace{0.6em}\link{https://vovantuan1999a.github.io/tuanvovan/}{vovantuan1999a.github.io/tuanvovan} &
+  \contactsize\iconEnvelope\hspace{0.6em}\link{mailto:vovantuan1999a@gmail.com}{vovantuan1999a@gmail.com} \\[2pt]
   \small\textit{Updated on \today} &
-  \small\iconScholar\hspace{0.6em}\link{https://scholar.google.com/citations?user=TsjvwzgAAAAJ}{Google Scholar} &
-  \small\iconGithub\hspace{0.6em}\link{https://github.com/vovantuan1999a}{GitHub} \\[2pt]
-  & & \small\iconPhone\hspace{0.6em}+971\,50\,438\,3972 \\
-\end{tabularx}
+  \contactsize\iconScholar\hspace{0.6em}\link{https://scholar.google.com/citations?user=TsjvwzgAAAAJ}{Google Scholar} &
+  \contactsize\iconGithub\hspace{0.6em}\link{https://github.com/vovantuan1999a}{GitHub} \\[2pt]
+  & & \contactsize\iconPhone\hspace{0.6em}+971\,50\,438\,3972 \\
+\end{tabular*}
+\ifshowphoto\end{minipage}\fi
 
 %----------EDUCATION----------
 \cvsection{Education}
