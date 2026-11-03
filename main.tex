@@ -27,13 +27,18 @@
   \usepackage[scaled]{helvet}\renewcommand{\familydefault}{\sfdefault}%
 }
 
-%----------ICONS (FontAwesome 5 on Overleaf; blank fallback elsewhere)----------
-\IfFileExists{fontawesome5.sty}{%
-  \usepackage{fontawesome5}%
-}{%
-  \newcommand{\faGlobe}{}\newcommand{\faEnvelope}{}\newcommand{\faGithub}{}%
-  \newcommand{\faPhone}{}\newcommand{\faGraduationCap}{}%
-}
+%----------ICONS----------
+% Vector icons from Font Awesome Free (CC BY 4.0, https://fontawesome.com/license/free),
+% embedded as TikZ paths so they render with any compiler and need no font package.
+\usepackage{tikz}
+% \cvicon{width}{height}{path}: draws the icon in its native box, scaled to text height
+\newcommand{\cvicon}[3]{\raisebox{-0.17em}{\resizebox{!}{1.05em}{%
+  \tikz[x=1pt,y=-1pt]{\path (0,0) rectangle (#1,#2); \fill #3;}}}}
+\newcommand{\iconGlobe}{\cvicon{512}{512}{(55.7,199.7)--(86.6,230.6)..controls(92.6,236.6)and(100.7,240)..(109.2,240)--(130.7,240)..controls(139.2,240)and(147.3,243.4)..(153.3,249.4)--(182.6,278.7)..controls(188.6,284.7)and(192,292.8)..(192,301.3)--(192,338.8)..controls(192,347.3)and(195.4,355.4)..(201.4,361.4)--(214.7,374.7)..controls(220.7,380.7)and(224.1,388.8)..(224.1,397.3)--(224.1,416)..controls(224.1,433.7)and(238.4,448)..(256.1,448)..controls(273.8,448)and(288.1,433.7)..(288.1,416)--(288.1,413.3)..controls(288.1,404.8)and(291.5,396.7)..(297.5,390.7)--(342.8,345.4)..controls(348.8,339.4)and(352.2,331.3)..(352.2,322.8)--(352.2,288.1)..controls(352.2,270.4)and(337.9,256.1)..(320.2,256.1)--(237.5,256.1)..controls(229,256.1)and(220.9,252.7)..(214.9,246.7)--(198.9,230.7)..controls(194.7,226.5)and(192.3,220.7)..(192.3,214.7)..controls(192.3,202.2)and(202.4,192.1)..(214.9,192.1)--(249.6,192.1)..controls(262.1,192.1)and(272.2,182)..(272.2,169.5)..controls(272.2,163.5)and(269.8,157.7)..(265.6,153.5)--(245.9,133.8)..controls(242,130)and(240,125.1)..(240,120)..controls(240,114.9)and(242,110)..(245.7,106.3)--(263,89)..controls(268.8,83.2)and(272.1,75.3)..(272.1,67.1)..controls(272.1,59.9)and(269.7,53.4)..(265.7,48.2)..controls(262.5,48.1)and(259.3,48)..(256.1,48)..controls(160.7,48)and(80.4,112.2)..(55.8,199.7)--cycle(464,256)..controls(464,221.4)and(455.6,188.8)..(440.6,160.2)..controls(434.2,161.1)and(427.9,164.1)..(422.7,169.3)--(409.3,182.7)..controls(403.3,188.7)and(399.9,196.8)..(399.9,205.3)--(399.9,240)..controls(399.9,257.7)and(414.2,272)..(431.9,272)--(456,272)..controls(458.5,272)and(461,271.7)..(463.3,271.2)..controls(463.7,266.2)and(463.8,261.1)..(463.8,256)--cycle(0,256)..controls(-0,114.62)and(114.62,0)..(256,0)..controls(397.38,-0)and(512,114.62)..(512,256)..controls(512,397.38)and(397.38,512)..(256,512)..controls(114.62,512)and(0,397.38)..(0,256)--cycle}}
+\newcommand{\iconEnvelope}{\cvicon{512}{512}{(48,64)..controls(21.5,64)and(0,85.5)..(0,112)..controls(0,127.1)and(7.1,141.3)..(19.2,150.4)--(227.2,306.4)..controls(244.3,319.2)and(267.7,319.2)..(284.8,306.4)--(492.8,150.4)..controls(504.9,141.3)and(512,127.1)..(512,112)..controls(512,85.5)and(490.5,64)..(464,64)--(48,64)--cycle(0,196)--(0,384)..controls(0,419.3)and(28.7,448)..(64,448)--(448,448)..controls(483.3,448)and(512,419.3)..(512,384)--(512,196)--(313.6,344.8)..controls(279.5,370.4)and(232.5,370.4)..(198.4,344.8)--(0,196)--cycle}}
+\newcommand{\iconGithub}{\cvicon{512}{512}{(216.5,362.5)..controls(150.5,354.5)and(104,307)..(104,245.5)..controls(104,220.5)and(113,193.5)..(128,175.5)..controls(121.5,159)and(122.5,124)..(130,109.5)..controls(150,107)and(177,117.5)..(193,132)..controls(212,126)and(232,123)..(256.5,123)..controls(281,123)and(301,126)..(319,131.5)..controls(334.5,117.5)and(362,107)..(382,109.5)..controls(389,123)and(390,158)..(383.5,175)..controls(399.5,194)and(408,219.5)..(408,245.5)..controls(408,307)and(361.5,353.5)..(294.5,362)..controls(311.5,373)and(323,397)..(323,424.5)--(323,476.5)..controls(323,491.5)and(335.5,500)..(350.5,494)..controls(441,459.5)and(512,369)..(512,257)..controls(512,115.5)and(397,0)..(255.5,0)..controls(114,0)and(0,115.5)..(0,257)..controls(0,368)and(70.5,460)..(165.5,494.5)..controls(179,499.5)and(192,490.5)..(192,477)--(192,437)..controls(185,440)and(176,442)..(168,442)..controls(135,442)and(115.5,424)..(101.5,390.5)..controls(96,377)and(90,369)..(78.5,367.5)..controls(72.5,367)and(70.5,364.5)..(70.5,361.5)..controls(70.5,355.5)and(80.5,351)..(90.5,351)..controls(105,351)and(117.5,360)..(130.5,378.5)..controls(140.5,393)and(151,399.5)..(163.5,399.5)..controls(176,399.5)and(184,395)..(195.5,383.5)..controls(204,375)and(210.5,367.5)..(216.5,362.5)--cycle}}
+\newcommand{\iconPhone}{\cvicon{512}{512}{(160.2,25)..controls(152.3,6.1)and(131.7,-3.9)..(112.1,1.4)--(106.6,2.9)..controls(42,20.5)and(-13.2,83.1)..(2.9,159.3)..controls(40,334.3)and(177.7,472)..(352.7,509.1)..controls(429,525.3)and(491.5,470)..(509.1,405.4)--(510.6,399.9)..controls(516,380.2)and(505.9,359.6)..(487.1,351.8)--(389.8,311.3)..controls(373.3,304.4)and(354.2,309.2)..(342.8,323.1)--(304.2,370.3)..controls(233.9,335.4)and(177.3,277)..(144.8,205.3)--(189,169.3)..controls(202.9,158)and(207.6,138.9)..(200.8,122.3)--(160.2,25)--cycle}}
+\newcommand{\iconScholar}{\cvicon{512}{512}{(390.9,298.5)..controls(390.9,298.5)and(390.9,298.6)..(391,298.6)..controls(400.2,318)and(405.4,339.7)..(405.4,362.6)..controls(405.3,445.1)and(338.5,512)..(256,512)..controls(173.5,512)and(106.7,445.1)..(106.7,362.7)..controls(106.7,339.8)and(111.9,318.1)..(121.1,298.7)..controls(122.8,295.1)and(124.7,291.5)..(126.7,288)..controls(131.1,280.4)and(136.1,273.3)..(141.7,266.7)..controls(169.1,234.1)and(210.2,213.4)..(256.1,213.4)..controls(289.7,213.4)and(320.7,224.5)..(345.7,243.3)..controls(354.8,250.2)and(363.1,258)..(370.5,266.8)..controls(376.1,273.4)and(381.1,280.6)..(385.5,288.1)..controls(387.5,291.5)and(389.3,295.1)..(391,298.6)--(390.9,298.5)--cycle(417.3,279.7)..controls(387.2,221.3)and(326.3,181.3)..(256,181.3)..controls(185.7,181.3)and(124.8,221.3)..(94.7,279.7)--(-0,202.7)--(256,0)--(512,202.7)--(417.3,279.8)--(417.3,279.7)--cycle}}
 
 %----------COLORS----------
 \definecolor{linkblue}{RGB}{58,110,165}
@@ -119,12 +124,12 @@
 \noindent
 \begin{tabularx}{\linewidth}{@{}X@{\hspace{10pt}}l@{\hspace{18pt}}l@{}}
   {\fontsize{20}{22}\selectfont\bfseries TUAN VAN VO} &
-  \small\faGlobe\enspace\link{https://vovantuan1999a.github.io/tuanvovan/}{vovantuan1999a.github.io/tuanvovan} &
-  \small\faEnvelope\enspace\link{mailto:vovantuan1999a@gmail.com}{vovantuan1999a@gmail.com} \\[2pt]
+  \small\iconGlobe\hspace{0.6em}\link{https://vovantuan1999a.github.io/tuanvovan/}{vovantuan1999a.github.io/tuanvovan} &
+  \small\iconEnvelope\hspace{0.6em}\link{mailto:vovantuan1999a@gmail.com}{vovantuan1999a@gmail.com} \\[2pt]
   \small\textit{Updated on \today} &
-  \small\faGraduationCap\enspace\link{https://scholar.google.com/citations?user=TsjvwzgAAAAJ}{Google Scholar} &
-  \small\faGithub\enspace\link{https://github.com/vovantuan1999a}{GitHub} \\[2pt]
-  & & \small\faPhone\enspace +971\,50\,438\,3972 \\
+  \small\iconScholar\hspace{0.6em}\link{https://scholar.google.com/citations?user=TsjvwzgAAAAJ}{Google Scholar} &
+  \small\iconGithub\hspace{0.6em}\link{https://github.com/vovantuan1999a}{GitHub} \\[2pt]
+  & & \small\iconPhone\hspace{0.6em}+971\,50\,438\,3972 \\
 \end{tabularx}
 
 %----------EDUCATION----------
@@ -238,8 +243,8 @@
   {UIT Study Scholarship, University of Information Technology, VNU-HCM}{}{}
 
 \cventry{2017 -- 2021}
-  {Honors Program (Talented Class), University of Information Technology, VNU-HCM}{}
-  {Selective program offering special curricula, scholarships and recognition for exceptional undergraduate students.}
+  {Talented Class Scholarship (Honors Program), University of Information Technology, VNU-HCM}{}
+  {Scholarship with stipend for students of the Talented Class, a selective honors program offering special curricula and recognition for exceptional undergraduate students.}
 
 \cventry{2019}
   {ICPC Vietnam National Programming Contest}{}
